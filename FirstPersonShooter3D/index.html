@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAA Professional 3D Shooter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Main Menu Overlay -->
+    <div id="main-menu" class="menu-overlay">
+        <div class="menu-content">
+            <h1 class="game-title">NEON STRIKE</h1>
+            <h2 class="game-subtitle">AAA ENGINE BUILD</h2>
+            
+            <div class="menu-tabs">
+                <button class="tab-btn active" data-tab="play">DEPLOY</button>
+                <button class="tab-btn" data-tab="loadout">ARMORY</button>
+                <button class="tab-btn" data-tab="settings">OPTIONS</button>
+            </div>
+
+            <!-- Play Tab -->
+            <div id="tab-play" class="tab-pane active">
+                <p>Select Operational Area:</p>
+                <div class="map-selection">
+                    <button class="map-btn active" data-map="arena">COLOSSEUM</button>
+                    <button class="map-btn" data-map="city">VERTICAL SLUMS</button>
+                    <button class="map-btn" data-map="platform">LABYRINTH</button>
+                </div>
+                <button id="start-game-btn" class="primary-btn mt-4">INITIATE DEPLOYMENT</button>
+            </div>
+
+            <!-- Loadout Tab -->
+            <div id="tab-loadout" class="tab-pane">
+                <p>Select Primary Weapon:</p>
+                <div class="loadout-selection">
+                    <button class="weapon-btn active" data-weapon="Pistol">PISTOL</button>
+                    <button class="weapon-btn" data-weapon="AssaultRifle">ASSAULT RIFLE</button>
+                    <button class="weapon-btn" data-weapon="Sniper">SNIPER</button>
+                    <button class="weapon-btn" data-weapon="Shotgun">SHOTGUN</button>
+                    <button class="weapon-btn" data-weapon="Rocket">ROCKET LAUNCHER</button>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="tab-pane">
+                <div class="settings-grid">
+                    <!-- Graphics -->
+                    <div class="settings-column">
+                        <h3>GRAPHICS</h3>
+                        <div class="setting-item">
+                            <label>Bloom Intensity: <span id="opt-bloom-val">High</span></label>
+                            <input type="range" id="opt-bloom" min="0" max="2" step="1" value="2">
+                        </div>
+                        <div class="setting-item">
+                            <label>Resolution Scale: <span id="opt-res-val">100%</span></label>
+                            <input type="range" id="opt-res" min="0.5" max="1.5" step="0.25" value="1.0">
+                        </div>
+                    </div>
+                    
+                    <!-- Gameplay -->
+                    <div class="settings-column">
+                        <h3>GAMEPLAY</h3>
+                        <div class="setting-item">
+                            <label>Difficulty: <span id="opt-diff-val">Normal</span></label>
+                            <input type="range" id="opt-diff" min="0" max="2" step="1" value="1">
+                        </div>
+                        <div class="setting-item">
+                            <label>Match Time (s): <span id="opt-time-val">60</span></label>
+                            <input type="range" id="opt-time" min="30" max="300" step="30" value="60">
+                        </div>
+                    </div>
+
+                    <!-- Audio & Controls -->
+                    <div class="settings-column">
+                        <h3>AUDIO & CONTROLS</h3>
+                        <div class="setting-item">
+                            <label>Master Volume: <span id="opt-vol-val">100%</span></label>
+                            <input type="range" id="opt-vol" min="0" max="1" step="0.1" value="1.0">
+                        </div>
+                        <div class="setting-item">
+                            <label>Mouse Sensitivity: <span id="opt-sens-val">1.0</span></label>
+                            <input type="range" id="opt-sens" min="0.1" max="3.0" step="0.1" value="1.0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="menu-overlay hidden">
+        <div class="menu-content text-center">
+            <h1 class="game-title">SYSTEM PAUSED</h1>
+            <p>Press ESC to resume</p>
+            <button id="resume-btn" class="primary-btn mt-4">RESUME OPERATION</button>
+            <button id="quit-btn" class="secondary-btn">ABORT MISSION</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen" class="menu-overlay hidden">
+        <div class="menu-content text-center">
+            <h1 class="game-title text-red">MISSION OVER</h1>
+            <h2>Total Eliminations: <span id="final-score" class="text-neon">0</span></h2>
+            <button id="restart-btn" class="primary-btn mt-4">REDEPLOY</button>
+            <button id="menu-btn" class="secondary-btn">MAIN MENU</button>
+        </div>
+    </div>
+
+    <!-- In-Game HUD -->
+    <div id="hud-layer" class="hidden">
+        
+        <!-- Directional Damage Indicator -->
+        <div id="damage-indicator-container">
+            <div id="dir-damage-top" class="dir-damage"></div>
+            <div id="dir-damage-right" class="dir-damage"></div>
+            <div id="dir-damage-bottom" class="dir-damage"></div>
+            <div id="dir-damage-left" class="dir-damage"></div>
+        </div>
+
+        <div id="crosshair">+</div>
+        <div id="hit-marker" class="hidden"></div>
+        <div id="damage-overlay" class="hidden"></div>
+        
+        <!-- Kill Feed -->
+        <div id="kill-feed"></div>
+        
+        <div class="hud-header">
+            <div class="hud-box">KILLS: <span id="scoreValue" class="text-neon">0</span></div>
+            <div class="hud-box">TIME: <span id="timerValue" class="text-neon">60</span></div>
+        </div>
+
+        <div class="hud-footer">
+            <div class="hud-health">
+                <div class="health-bar-container">
+                    <div id="health-bar" class="health-fill"></div>
+                </div>
+                <div id="health-text">INTEGRITY: 100%</div>
+            </div>
+            
+            <div class="hud-weapon">
+                <div id="weaponValue" class="weapon-name">PISTOL</div>
+                <div class="weapon-ammo">STATUS: READY</div>
+                <div class="movement-tips">SHIFT: Dash | SPACEx2: Double Jump</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Import Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="game3d.js"></script>
+</body>
+</html>
